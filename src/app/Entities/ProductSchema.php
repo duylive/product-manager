@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class ProductSchema extends Model
 {
     protected $fillable = [
+        'name',
         'label',
         'schema_type_id',
         'schema_rule_id',
@@ -21,5 +22,10 @@ class ProductSchema extends Model
     public function schemaRule()
     {
         return $this->beLongsTo(ProductSchemaRule::class);
+    }
+
+    public function scopeOfProductType($query, $product_type)
+    {
+        return $query->where('product_type', $product_type);
     }
 }
