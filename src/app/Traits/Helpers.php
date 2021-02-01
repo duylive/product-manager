@@ -26,27 +26,10 @@ trait Helpers
         $type = $this->getProductTypesFromRequest($request);
         $key  = ucwords($type) . 'Schema';
 
-        $fieldMeta = ProductSchema::all();
-        $meta = array();
-        foreach ($fieldMeta as $item) {
-            $metaType = substr(trim(trim(trim(ProductSchemaType::where('id', $item->schema_type_id)->select('name')->get(),"[]"), "{}"), '""'), 7);
-            $metaRule = substr(trim(trim(trim(ProductSchemaRule::where('id', $item->schema_rule_id)->select('name')->get(),"[]"), "{}"), '""'), 7);
-            array_push($meta, [ 'data' => [$item->name => [
-                    'type'  => $metaType,
-                    'label' => $item->label,
-                    'rule'  => $metaRule,
-                    'name'  => $item->name,
-                    'productType' => $item->product_type
-                ]
-                ]
-                ]
-            );
-        }
-
         if (method_exists($entity, $key)) {
-            $schema = collect($entity->$key());
+            $schema =  collect($entity->$key());
         } else {
-            $schema = collect(json(trim(json_encode($meta), '[]')));
+            $schema = collect($entity->schema());
         }
 
         $request_data_keys = $request_data->keys();
