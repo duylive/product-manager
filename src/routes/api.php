@@ -71,6 +71,20 @@ $api->version('v1', function ($api) use ($productTypes) {
             $api->get('schema-rules', 'VCComponent\Laravel\Product\Http\Controllers\Api\Admin\SchemaRuleController@index');
             $api->get('schema-rules/all', 'VCComponent\Laravel\Product\Http\Controllers\Api\Admin\SchemaRuleController@list');
 
+            $api->resource('dimensions', 'VCComponent\Laravel\Product\Http\Controllers\Api\Admin\ProductImagesDimensionController');
+
+            $api->get('dimension-name', 'VCComponent\Laravel\Product\Http\Controllers\Api\Admin\ProductImagesDimensionNameController@index');
+            $api->get('dimension-name/{id}', 'VCComponent\Laravel\Product\Http\Controllers\Api\Admin\ProductImagesDimensionNameController@show');
+
+            $api->get('dimension-type', 'VCComponent\Laravel\Product\Http\Controllers\Api\Admin\ProductImagesDimensionTypeController@index');
+            $api->get('dimension-type/{id}', 'VCComponent\Laravel\Product\Http\Controllers\Api\Admin\ProductImagesDimensionTypeController@show');
+
+            $api->resource('dimension-width', 'VCComponent\Laravel\Product\Http\Controllers\Api\Admin\ProductImagesDimensionWidthController');
+
+            $api->resource('dimension-height', 'VCComponent\Laravel\Product\Http\Controllers\Api\Admin\ProductImagesDimensionHeightController');
+
+            $api->get('products/{id}/thumbnail', 'VCComponent\Laravel\Product\Http\Controllers\Api\Admin\ProductController@getThumbnailProduct');
+
             if (count($productTypes)) {
                 foreach ($productTypes as $productType) {
                     $api->get($productType . '/exports', 'VCComponent\Laravel\Product\Http\Controllers\Api\Admin\ProductController@export');

@@ -19,6 +19,16 @@ use VCComponent\Laravel\Product\Repositories\AttributeValueRepository;
 use VCComponent\Laravel\Product\Repositories\AttributeValueRepositoryEloquent;
 use VCComponent\Laravel\Product\Repositories\ProductAttributeRepository;
 use VCComponent\Laravel\Product\Repositories\ProductAttributeRepositoryEloquent;
+use VCComponent\Laravel\Product\Repositories\ProductImagesDimensionHeightRepository;
+use VCComponent\Laravel\Product\Repositories\ProductImagesDimensionHeightRepositoryEloquent;
+use VCComponent\Laravel\Product\Repositories\ProductImagesDimensionNameRepository;
+use VCComponent\Laravel\Product\Repositories\ProductImagesDimensionNameRepositoryEloquent;
+use VCComponent\Laravel\Product\Repositories\ProductImagesDimensionRepository;
+use VCComponent\Laravel\Product\Repositories\ProductImagesDimensionRepositoryEloquent;
+use VCComponent\Laravel\Product\Repositories\ProductImagesDimensionTypeRepository;
+use VCComponent\Laravel\Product\Repositories\ProductImagesDimensionTypeRepositoryEloquent;
+use VCComponent\Laravel\Product\Repositories\ProductImagesDimensionWidthRepository;
+use VCComponent\Laravel\Product\Repositories\ProductImagesDimensionWidthRepositoryEloquent;
 use VCComponent\Laravel\Product\Repositories\ProductRepository;
 use VCComponent\Laravel\Product\Repositories\ProductRepositoryEloquent;
 use VCComponent\Laravel\Product\Repositories\ProductSchemaRepository;
@@ -67,6 +77,11 @@ class ProductServiceProvider extends ServiceProvider
         $this->app->bind(ProductSchemaRepository::class, ProductSchemaRepositoryEloquent::class);
         $this->app->bind(ProductSchemaTypeRepository::class, ProductSchemaTypeRepositoryEloquent::class);
         $this->app->bind(ProductSchemaRuleRepository::class, ProductSchemaRuleRepositoryEloquent::class);
+        $this->app->bind(ProductImagesDimensionRepository::class, ProductImagesDimensionRepositoryEloquent::class);
+        $this->app->bind(ProductImagesDimensionNameRepository::class, ProductImagesDimensionNameRepositoryEloquent::class);
+        $this->app->bind(ProductImagesDimensionTypeRepository::class, ProductImagesDimensionTypeRepositoryEloquent::class);
+        $this->app->bind(ProductImagesDimensionHeightRepository::class, ProductImagesDimensionHeightRepositoryEloquent::class);
+        $this->app->bind(ProductImagesDimensionWidthRepository::class, ProductImagesDimensionWidthRepositoryEloquent::class);
         $this->registerControllers();
 
         $this->app->singleton('moduleProduct.product', function () {

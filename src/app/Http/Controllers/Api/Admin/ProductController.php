@@ -32,11 +32,11 @@ class ProductController extends ApiController
 
     public function __construct(ProductRepository $repository, ProductValidator $validator, ProductAttributeValidator $attribute_validator, Request $request)
     {
-        $this->repository          = $repository;
-        $this->entity              = $repository->getEntity();
-        $this->validator           = $validator;
+        $this->repository = $repository;
+        $this->entity = $repository->getEntity();
+        $this->validator = $validator;
         $this->attribute_validator = $attribute_validator;
-        $this->productType         = $this->getProductTypesFromRequest($request);
+        $this->productType = $this->getProductTypesFromRequest($request);
 
         if (!empty(config('product.auth_middleware.admin'))) {
             $user = $this->getAuthenticatedUser();
@@ -66,16 +66,16 @@ class ProductController extends ApiController
         }
         $this->validator->isValid($request, 'RULE_EXPORT');
 
-        $data     = $request->all();
+        $data = $request->all();
         $products = $this->getReportProducts($request);
 
         $args = [
-            'data'      => $products,
-            'label'     => $request->label ? $data['label'] : 'products',
+            'data' => $products,
+            'label' => $request->label ? $data['label'] : 'products',
             'extension' => $request->extension ? $data['extension'] : 'Xlsx',
         ];
         $export = new export($args);
-        $url    = $export->export();
+        $url = $export->export();
 
         if (config('product.test_mode')) {
             return $this->response->array(['data' => $products]);
@@ -138,7 +138,7 @@ class ProductController extends ApiController
         $query = $this->applySearchFromRequest($query, ['name', 'description', 'price'], $request, ['productMetas' => ['value']]);
         $query = $this->applyOrderByFromRequest($query, $request);
 
-        $per_page = $request->has('per_page') ? (int) $request->get('per_page') : 15;
+        $per_page = $request->has('per_page') ? (int)$request->get('per_page') : 15;
         $products = $query->paginate($per_page);
 
         if ($request->has('includes')) {
@@ -160,7 +160,8 @@ class ProductController extends ApiController
         return $query;
     }
 
-    function list(Request $request) {
+    function list(Request $request)
+    {
         $query = $this->entity;
         $query = $this->applyQueryScope($query, 'product_type', $this->productType);
         $query = $this->getFromDate($request, $query);
@@ -195,7 +196,7 @@ class ProductController extends ApiController
             }
         }
 
-        $query   = $this->entity;
+        $query = $this->entity;
         $product = $query->where('id', $id)->first();
 
         if (!$product) {
@@ -224,12 +225,12 @@ class ProductController extends ApiController
 
         $data = $this->filterProductRequestData($request, $this->entity);
 
-        $schema_rules   = $this->validator->getSchemaRules($this->entity);
+        $schema_rules = $this->validator->getSchemaRules($this->entity);
         $no_rule_fields = $this->validator->getNoRuleFields($this->entity);
 
         if ($request->get('random_sku', false)) {
 
-            $sku       = $this->getSku();
+            $sku = $this->getSku();
             $check_sku = $this->repository->checkSku($sku);
             if (!$check_sku) {
                 $sku = $this->getSku();
@@ -250,7 +251,7 @@ class ProductController extends ApiController
         if (count($no_rule_fields)) {
             foreach ($no_rule_fields as $key => $value) {
                 $product->productMetas()->updateOrCreate([
-                    'key'   => $key,
+                    'key' => $key,
                     'value' => null,
                 ], ['value' => '']);
             }
@@ -289,7 +290,7 @@ class ProductController extends ApiController
             throw new NotFoundException('Product');
         }
 
-        $data         = $this->filterProductRequestData($request, $this->entity);
+        $data = $this->filterProductRequestData($request, $this->entity);
         $schema_rules = $this->validator->getSchemaRules($this->entity);
 
         $this->validator->isValid($data['default'], 'RULE_ADMIN_UPDATE');
@@ -372,7 +373,7 @@ class ProductController extends ApiController
 
         $this->validator->isValid($request, 'UPDATE_STATUS_ITEM');
 
-        $data            = $request->all();
+        $data = $request->all();
         $product->status = $data['status'];
         $product->save();
 
@@ -491,9 +492,9 @@ class ProductController extends ApiController
     {
         if ($request->has('from')) {
 
-            $field     = $this->field($request);
+            $field = $this->field($request);
             $form_date = $this->fomatDate($request->from);
-            $query     = $query->whereDate($field, '>=', $form_date);
+            $query = $query->whereDate($field, '>=', $form_date);
         }
         return $query;
     }
@@ -501,9 +502,9 @@ class ProductController extends ApiController
     public function getToDate($request, $query)
     {
         if ($request->has('to')) {
-            $field   = $this->field($request);
+            $field = $this->field($request);
             $to_date = $this->fomatDate($request->to);
-            $query   = $query->whereDate($field, '<=', $to_date);
+            $query = $query->whereDate($field, '<=', $to_date);
         }
         return $query;
     }
@@ -540,12 +541,12 @@ class ProductController extends ApiController
 
     public function getSku()
     {
-        $query_id   = $this->repository->getMaxId();
+        $query_id = $this->repository->getMaxId();
         $id_product = $query_id + 1;
 
-        $date   = str_replace('-', '', Carbon::now()->format('d-m-Y'));
+        $date = str_replace('-', '', Carbon::now()->format('d-m-Y'));
         $string = str::random(5);
-        $sku    = $id_product . $date . $string;
+        $sku = $id_product . $date . $string;
 
         return $sku;
     }
@@ -564,7 +565,7 @@ class ProductController extends ApiController
     {
         $this->validator->isValid($request, 'RULE_IDS');
 
-        $ids      = $request->ids;
+        $ids = $request->ids;
         $products = $this->entity::whereIn('id', $ids);
         if (count($ids) > $products->get()->count()) {
             throw new NotFoundException('Product');
@@ -587,7 +588,7 @@ class ProductController extends ApiController
     public function bulkRestore(Request $request)
     {
         $this->validator->isValid($request, 'RULE_IDS');
-        $ids      = $request->ids;
+        $ids = $request->ids;
         $products = $this->entity->onlyTrashed()->whereIn("id", $ids)->get();
 
         if (count($ids) > $products->count()) {
@@ -614,9 +615,9 @@ class ProductController extends ApiController
         if ($trash->first() === null) {
             $product = [];
         }
-        $trash    = $this->applySearchFromRequest($trash, ['name', 'description', 'price'], $request);
-        $per_page = $request->has('per_page') ? (int) $request->get('per_page') : 15;
-        $product  = $trash->paginate($per_page);
+        $trash = $this->applySearchFromRequest($trash, ['name', 'description', 'price'], $request);
+        $per_page = $request->has('per_page') ? (int)$request->get('per_page') : 15;
+        $product = $trash->paginate($per_page);
 
         return $this->response->paginator($product, new $this->transformer());
     }
@@ -624,7 +625,7 @@ class ProductController extends ApiController
     public function forceBulkDelete(Request $request)
     {
         $this->validator->isValid($request, 'RULE_IDS');
-        $ids      = $request->ids;
+        $ids = $request->ids;
         $products = $this->entity->whereIn("id", $ids);
         if (count($ids) > $products->get()->count()) {
             throw new NotFoundException('Product');
@@ -652,7 +653,7 @@ class ProductController extends ApiController
     public function bulkDeleteTrash(Request $request)
     {
         $this->validator->isValid($request, 'RULE_IDS');
-        $ids      = $request->ids;
+        $ids = $request->ids;
         $products = $this->entity->onlyTrashed()->whereIn("id", $ids)->get();
         if (count($ids) > $products->count()) {
             throw new NotFoundException('Product');
@@ -685,4 +686,30 @@ class ProductController extends ApiController
         $data = ProductSchema::get();
         return $this->response->collection($data, new ProductSchemaTransformer());
     }
+
+    public function getThumbnailProduct(Request $request, $id)
+    {
+        if (!empty(config('product.auth_middleware.admin'))) {
+            $user = $this->getAuthenticatedUser();
+            if (!$this->entity->ableToShow($user, $id)) {
+                throw new PermissionDeniedException();
+            }
+        }
+
+        $query = $this->entity;
+        $thumbnailProduct = $query->where('id', $id)->select('thumbnail')->get();
+
+        if (!$thumbnailProduct) {
+            throw new NotFoundException($this->productType);
+        }
+
+        if ($request->has('includes')) {
+            $transformer = new $this->transformer(explode(',', $request->get('includes')));
+        } else {
+            $transformer = new $this->transformer;
+        }
+
+        return $this->response->item($thumbnailProduct, $transformer);
+    }
+
 }
