@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use VCComponent\Laravel\Product\Entities\ProductSchemaType;
 
-class SeedProductSchemaTypes extends Migration
+class SeedProductSchemaTypesAddCheckbox extends Migration
 {
     /**
      * Run the migrations.
@@ -17,14 +17,8 @@ class SeedProductSchemaTypes extends Migration
     {
         ProductSchemaType::insert([
             [
-                "name" => "text",
-            ],
-            [
-                "name" => "textarea",
-            ],
-            [
-                "name" => "tinyMCE",
-            ],
+                "name" => "checkbox",
+            ]
         ]);
     }
 
@@ -35,6 +29,5 @@ class SeedProductSchemaTypes extends Migration
      */
     public function down()
     {
-
     }
 }
