@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use VCComponent\Laravel\Export\Services\Export\Export;
+use VCComponent\Laravel\Product\Entities\Product;
 use VCComponent\Laravel\Product\Entities\ProductSchema;
 use VCComponent\Laravel\Product\Entities\ProductSchemaRule;
 use VCComponent\Laravel\Product\Entities\ProductSchemaType;
@@ -687,29 +688,28 @@ class ProductController extends ApiController
         return $this->response->collection($data, new ProductSchemaTransformer());
     }
 
-    public function getThumbnailProduct(Request $request, $id)
+    public function addMediaProduct($id)
     {
-        if (!empty(config('product.auth_middleware.admin'))) {
-            $user = $this->getAuthenticatedUser();
-            if (!$this->entity->ableToShow($user, $id)) {
-                throw new PermissionDeniedException();
-            }
-        }
+        $product = Product::find($id);
+        return $product->addMedia(public_path('assets/images/img-fb-v10.jpg'))->preservingOriginal()->toMediaCollection();
+    }
 
-        $query = $this->entity;
-        $thumbnailProduct = $query->where('id', $id)->select('thumbnail')->get();
+    public function addMediaProductCollection($id, $collection_name)
+    {
+        $product = Product::find($id);
+        return $product->addMedia(public_path('assets/images/img-fb-v10.jpg'))->preservingOriginal()->toMediaCollection($collection_name);
+    }
 
-        if (!$thumbnailProduct) {
-            throw new NotFoundException($this->productType);
-        }
+    public function getMediaProduct($id)
+    {
+        $product = Product::find($id);
+        return $product->getMedia();
+    }
 
-        if ($request->has('includes')) {
-            $transformer = new $this->transformer(explode(',', $request->get('includes')));
-        } else {
-            $transformer = new $this->transformer;
-        }
-
-        return $this->response->item($thumbnailProduct, $transformer);
+    public function getMediaProductCollection($id, $collection_name)
+    {
+        $product = Product::find($id);
+        return $product->getMedia($collection_name);
     }
 
 }

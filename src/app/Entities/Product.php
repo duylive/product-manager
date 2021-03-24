@@ -15,10 +15,14 @@ use VCComponent\Laravel\Product\Entities\Variant;
 use VCComponent\Laravel\Product\Traits\ProductManagementTrait;
 use VCComponent\Laravel\Product\Traits\ProductSchemaTrait;
 use VCComponent\Laravel\Tag\Traits\HasTagsTraits;
+use Spatie\MediaLibrary\Models\Media;
 
-class Product extends Model implements Transformable, ProductSchema, ProductManagement
+use Spatie\MediaLibrary\HasMedia\HasMedia;
+use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
+
+class Product extends Model implements Transformable, ProductSchema, ProductManagement, HasMedia
 {
-    use TransformableTrait, ProductSchemaTrait, ProductManagementTrait, Sluggable, SluggableScopeHelpers, HasTagsTraits, SoftDeletes;
+    use TransformableTrait, ProductSchemaTrait, ProductManagementTrait, Sluggable, SluggableScopeHelpers, HasTagsTraits, SoftDeletes, HasMediaTrait;
 
     const STATUS_PENDING   = 0;
     const STATUS_PUBLISHED = 1;
@@ -43,8 +47,49 @@ class Product extends Model implements Transformable, ProductSchema, ProductMana
         'product_type',
         'sku',
         'order',
-        'slug'
     ];
+
+    public $registerMediaConversionsUsingModelInstance = true;
+
+    public function registerMediaConversions(Media $media = null)
+    {
+        $dimensionNameSmall = 'Small';
+        $dimensionSmallID = ProductImagesDimensionName::where('name', $dimensionNameSmall)->first()->id;
+        $dimensionSmallWidthID = ProductImagesDimension::where('product_dimension_name_id', $dimensionSmallID)->first()->product_dimension_width_id;
+        $dimensionSmallWidth = ProductImagesDimensionWidth::where('id', $dimensionSmallWidthID)->first()->value;
+        $dimensionSmallHeightID = ProductImagesDimension::where('product_dimension_name_id', $dimensionSmallID)->first()->product_dimension_height_id;
+        $dimensionSmallHeight = ProductImagesDimensionHeight::where('id', $dimensionSmallHeightID)->first()->value;
+
+        $dimensionNameMedium = 'Medium';
+        $dimensionMediumID = ProductImagesDimensionName::where('name', $dimensionNameMedium)->first()->id;
+        $dimensionMediumWidthID = ProductImagesDimension::where('product_dimension_name_id', $dimensionMediumID)->first()->product_dimension_width_id;
+        $dimensionMediumWidth = ProductImagesDimensionWidth::where('id', $dimensionMediumWidthID)->first()->value;
+        $dimensionMediumHeightID = ProductImagesDimension::where('product_dimension_name_id', $dimensionMediumID)->first()->product_dimension_height_id;
+        $dimensionMediumHeight = ProductImagesDimensionHeight::where('id', $dimensionMediumHeightID)->first()->value;
+
+        $dimensionNameLarge = 'Large';
+        $dimensionLargeID = ProductImagesDimensionName::where('name', $dimensionNameLarge)->first()->id;
+        $dimensionLargeWidthID = ProductImagesDimension::where('product_dimension_name_id', $dimensionLargeID)->first()->product_dimension_width_id;
+        $dimensionLargeWidth = ProductImagesDimensionWidth::where('id', $dimensionLargeWidthID)->first()->value;
+        $dimensionLargeHeightID = ProductImagesDimension::where('product_dimension_name_id', $dimensionLargeID)->first()->product_dimension_height_id;
+        $dimensionLargeHeight = ProductImagesDimensionHeight::where('id', $dimensionLargeHeightID)->first()->value;
+
+        $this->addMediaConversion('thumb')->width(config('vc-media-manager.thumb_size.width'))->height(config('vc-media-manager.thumb_size.height'))->sharpen(10);
+        $this->addMediaConversion($dimensionNameSmall)->width($dimensionSmallWidth)->height($dimensionSmallHeight)->sharpen(10);
+        $this->addMediaConversion($dimensionNameMedium)->width($dimensionMediumWidth)->height($dimensionMediumHeight)->sharpen(10);
+        $this->addMediaConversion($dimensionNameLarge)->width($dimensionLargeWidth)->height($dimensionLargeHeight)->sharpen(10);
+
+    }
+
+    public function schema()
+    {
+        return [
+            'alt_image' => [
+                'type' => 'string',
+                'rule' => [],
+            ],
+        ];
+    }
 
     public function sluggable()
     {
@@ -105,5 +150,10 @@ class Product extends Model implements Transformable, ProductSchema, ProductMana
     public function ableToUse($user)
     {
         return true;
+    }
+
+    public function productMediaDimension()
+    {
+        return $this->hasMany(ProductMediaDimension::class);
     }
 }

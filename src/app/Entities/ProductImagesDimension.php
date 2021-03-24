@@ -8,10 +8,10 @@ class ProductImagesDimension extends Model
 {
     protected $fillable = [
         'id',
-        'dimension_name_id',
-        'dimension_type_id',
-        'dimension_width_id',
-        'dimension_height_id',
+        'product_dimension_name_id',
+        'product_dimension_type_id',
+        'product_dimension_width_id',
+        'product_dimension_height_id',
         'product_type',
     ];
 
@@ -38,5 +38,10 @@ class ProductImagesDimension extends Model
     public function scopeOfProductType($query, $product_type)
     {
         return $query->where('product_type', $product_type);
+    }
+
+    public function productMediaDimension()
+    {
+        return $this->hasMany(ProductMediaDimension::class);
     }
 }

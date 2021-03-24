@@ -25,9 +25,6 @@ class SeedProductImagesDimensionNames extends Migration
             [
                 "name" => "Large"
             ],
-            [
-                "name" => "Original"
-            ],
         ]);
     }
 

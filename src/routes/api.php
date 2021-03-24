@@ -14,6 +14,14 @@ $api = app('Dingo\Api\Routing\Router');
 $api->version('v1', function ($api) use ($productTypes) {
     $api->group(['prefix' => config('product.namespace')], function ($api) use ($productTypes) {
         $api->group(['prefix' => 'admin'], function ($api) use ($productTypes) {
+            $api->get('add-media/{id}', 'VCComponent\Laravel\Product\Http\Controllers\Api\Admin\ProductController@addMediaProduct');
+
+            $api->get('add-media/{id}/{collection_name}', 'VCComponent\Laravel\Product\Http\Controllers\Api\Admin\ProductController@addMediaProductCollection');
+
+            $api->get('get-media/{id}', 'VCComponent\Laravel\Product\Http\Controllers\Api\Admin\ProductController@getMediaProduct');
+
+            $api->get('get-media/{id}/{collection_name}', 'VCComponent\Laravel\Product\Http\Controllers\Api\Admin\ProductController@getMediaProductCollection');
+
             $api->get('products/field-meta', 'VCComponent\Laravel\Product\Http\Controllers\Api\Admin\ProductController@getFieldMeta');
             $api->get('products/exports', 'VCComponent\Laravel\Product\Http\Controllers\Api\Admin\ProductController@export');
             $api->delete('products/bulk', 'VCComponent\Laravel\Product\Http\Controllers\Api\Admin\ProductController@bulkDelete');

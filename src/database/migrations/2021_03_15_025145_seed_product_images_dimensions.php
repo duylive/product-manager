@@ -20,50 +20,38 @@ class SeedProductImagesDimensions extends Migration
             [
                 "dimension_name_id" => 1,
                 "dimension_type_id" => 1,
-                "dimension_width_id" => 1,
+                "dimension_width_id" => 3,
                 "dimension_height_id" => 2
             ],
             [
                 "dimension_name_id" => 2,
                 "dimension_type_id" => 1,
-                "dimension_width_id" => 2,
+                "dimension_width_id" => 4,
                 "dimension_height_id" => 3
             ],
             [
                 "dimension_name_id" => 3,
                 "dimension_type_id" => 1,
-                "dimension_width_id" => 3,
+                "dimension_width_id" => 5,
                 "dimension_height_id" => 4
-            ],
-            [
-                "dimension_name_id" => 4,
-                "dimension_type_id" => 1,
-                "dimension_width_id" => 4,
-                "dimension_height_id" => 5
             ],
             [
                 "dimension_name_id" => 1,
                 "dimension_type_id" => 2,
-                "dimension_width_id" => 1,
+                "dimension_width_id" => 3,
                 "dimension_height_id" => 2
             ],
             [
                 "dimension_name_id" => 2,
                 "dimension_type_id" => 2,
-                "dimension_width_id" => 2,
+                "dimension_width_id" => 4,
                 "dimension_height_id" => 3
             ],
             [
                 "dimension_name_id" => 3,
                 "dimension_type_id" => 2,
-                "dimension_width_id" => 3,
+                "dimension_width_id" => 5,
                 "dimension_height_id" => 4
-            ],
-            [
-                "dimension_name_id" => 4,
-                "dimension_type_id" => 2,
-                "dimension_width_id" => 4,
-                "dimension_height_id" => 5
             ],
         ]);
     }
